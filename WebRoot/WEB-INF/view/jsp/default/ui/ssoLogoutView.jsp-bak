@@ -1,0 +1,43 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<% 
+String service = request.getAttribute("appService")==null?null:request.getAttribute("appService").toString();
+String appId = request.getAttribute("appId")==null?null:request.getAttribute("appId").toString();
+String method = request.getAttribute("method")==null?null:request.getAttribute("method").toString();
+String msg = request.getAttribute("msg")==null?null:request.getAttribute("msg").toString();
+if(method!=null && method.equals("reset") && service!=null && service.length()>0 && appId!=null && appId.length()>0) {
+%>
+    <script>
+	alert("<%=msg%>");
+	document.location.replace("login?service=<%=java.net.URLEncoder.encode(service,"utf-8")%>&appId=<%=java.net.URLEncoder.encode(appId,"utf-8")%>&sessionId=<%=request.getSession().getId()%>"); 
+	event.returnValue=false;
+	</script>
+<%
+}else if(service!=null && service.length()>0 && appId!=null && appId.length()>0) {
+%>
+	<script>
+	alert("已退出");
+	document.location.replace("login?service=<%=java.net.URLEncoder.encode(service,"utf-8")%>&appId=<%=java.net.URLEncoder.encode(appId,"utf-8")%>&sessionId=<%=request.getSession().getId()%>"); 
+	event.returnValue=false;
+	</script>
+<%}else { %>
+<jsp:directive.include file="includes/top.jsp" />
+
+		<div id="msg" class="success">			
+			<h2><spring:message code="screen.logout.header" /></h2>
+			
+			<p><spring:message code="screen.logout.success" /></p>
+			<p><spring:message code="screen.logout.security" /></p>
+			
+			<%--
+			 Implementation of support for the "url" parameter to logout as recommended in CAS spec section 2.3.1.
+			 A service sending a user to CAS for logout can specify this parameter to suggest that we offer
+			 the user a particular link out from the logout UI once logout is completed.  We do that here.
+			--%>
+			<c:if test="${not empty param['url']}">
+			<p>
+				<spring:message code="screen.logout.redirect" arguments="${param['url']}" />
+			</p>
+			</c:if>
+		</div>
+<jsp:directive.include file="includes/bottom.jsp" />
+<%}%>
