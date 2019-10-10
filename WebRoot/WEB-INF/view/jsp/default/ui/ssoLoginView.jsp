@@ -13,120 +13,82 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
-	 <title>SSO &#8211;Single Sign On</title>
+	 <title>统一身份认证登录</title>
+	 <link rel="stylesheet" href="css/reset.css" />
+	 <link rel="stylesheet" href="css/common.css" />
+	 <link rel="stylesheet" href="css/font-awesome.min.css" />
 </head>
 	
-<style type="text/css" media="screen">@import 'css/sso.css'/**/;</style>
 
 
 <script language=javascript>
 
-<% 
-	String localeNow = StringUtil.htmlFilter(request.getParameter("locale"));
-	
-	if("".equals(localeNow) || localeNow == null){
-		String localeCookie = null;
-		Cookie[] cs = request.getCookies();
-		if(cs != null){
-			int length = cs.length;
-			for(int i=0;i<length; i++){
-				if("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE".equals(cs[i].getName())){
-					localeCookie = cs[i].getValue();
-				}
-			}
-			localeNow = localeCookie;
-		}else{
-			localeNow = "select";
-		}
-	}
-
- %>			
-function changeLanguage(){
-		var str =  "login?locale="+ document.getElementById("language").value;
-		location.href = str;
-				}
-			
-function loadfn(){
-	var s = document.getElementById("language");
-   	var ops = s.options;
-  	var requestLocale = "<%=localeNow%>";
-   	for(var i=0;i<ops.length; i++){
-    var tempValue = ops[i].value;
-    if(tempValue == requestLocale )
-    {
-     ops[i].selected = true;
-    }
-   } 
-
+function login (){
+	debugger;
+	$('#form1').submit();
 }
 </script>
   
-<body class="bg_login" marginheight="0" marginwidth="0" onload="loadfn()">
+<body class="bg_login" marginheight="0" marginwidth="0" >
 
 <div class="fg_login">
  
-<form method="post" action="<%=request.getContextPath()+"/"+response.encodeRedirectURL("login" + (StringUtils.hasText(request.getQueryString()) ? "?" + StringUtil.htmlFilter(request.getQueryString()) : ""))%>">
-
-	
-<table class="tb">
-    <tr>
-	   <td colspan=2>
-		  <div style= "height:50px; width:100%; overflow:hidden; "> 
-	        <spring:hasBindErrors name="credentials">
-	              <c:forEach var="error" items="${errors.allErrors}" varStatus="status">
-	              <br/> 
-	              	<span id="${status.count}">
-	                 <font color='red'>
-	                      <spring:message code="${error.code}" text="${error.defaultMessage}"/>
-	                 </font>
-	                 </span>
-	               </c:forEach>
-	                      </spring:hasBindErrors>
-		  </div>
-	    </td>
-    </tr>
-    
-    <tr>
-		<td width="50" ><label for="language"><spring:message code="screen.welcome.label.language" /></label>
-		</td>
-		<td width="230">
-			<select id="language" style="width:185px" onchange="changeLanguage();" filter="false" >
-			    <option value="select">select one</option>
-		        <option value="zh_CN">中文 (中国)</option>
-				<option value="en">English (United States)</option>
-			</select>
-		</td>
-	</tr>
-
-	<tr>
-		<td width="50" ><label for="username"><spring:message code="screen.welcome.label.netid" /></label>
-		</td>
-		<td width="230">
-		   <spring:message code="screen.welcome.label.netid.accesskey" var="userNameAccessKey" />
+<form method="post" id="form1" action="<%=request.getContextPath()+"/"+response.encodeRedirectURL("login" + (StringUtils.hasText(request.getQueryString()) ? "?" + StringUtil.htmlFilter(request.getQueryString()) : ""))%>">
+<div class="wrap login_wrap">
+			<div class="content">
+				<div class="logo"></div>
+				<div class="login_box">	
+					
+					<div class="login_form">
+						<div class="login_title">
+							登录
+						</div>
+						<form action="#" method="post">
+							
+							<div class="form_text_ipt">
+								<spring:message code="screen.welcome.label.netid.accesskey" var="userNameAccessKey" />
 		   <input id="username" name="username" class="txt_input" size="25" tabindex="1" accesskey="${userNameAccessKey}"  autocomplete="false" htmlEscape="true" />
-		</td>
-	</tr>
-	<tr>
-		<td width="50" ><label for="password"><spring:message code="screen.welcome.label.password" /></label>
-		</td>
-		<td width="230">
-			<spring:message code="screen.welcome.label.password.accesskey" var="passwordAccessKey" />
+							</div>
+							<div class="ececk_warning"><span>手机号/邮箱不能为空</span></div>
+							<div class="form_text_ipt">
+								<spring:message code="screen.welcome.label.password.accesskey" var="passwordAccessKey" />
 		    <input type="password" id="password" name="password" class="txt_input" size="25" tabindex="2" accesskey="${passwordAccessKey}" htmlEscape="true" />
-		</td>
-	</tr>
-	
-	<tr><td><div style= "height:6px; width:100%; overflow:hidden; "></div></td></tr>
-		 
-	<tr>		
-		<td style="padding-right:50px;text-align:right;vertical-align:middle;" colspan=2>	
-		     <input type="hidden" name="lt" value="${flowExecutionKey}" />
+							</div>
+							<div class="ececk_warning"><span>密码不能为空</span></div>
+							<div class="form_check_ipt">
+								<div class="left check_left">
+									<label><input name="" type="checkbox"> 下次自动登录</label>
+								</div>
+								<div class="right check_right">
+									<a href="#">忘记密码</a>
+								</div>
+							</div>
+							<div class="form_btn">
+								<input type="hidden" name="lt" value="${flowExecutionKey}" />
 	         <input type="hidden" name="_eventId" value="submit" />
 	    
-		     <input class="btn" name="submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="3" type="submit" />
-             <input class="btn" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="4" type="reset" />
-		</td>		
-	</tr>
-</table>
+		     <input class="btn cas_btn" name="submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="3" type="submit" />
+							</div>
+							<div class="form_reg_btn">
+								<span>还没有帐号？</span><a href="register.html">马上注册</a>
+							</div>
+						</form>
+						<div class="other_login">
+							<div class="left other_left">
+								<span>其它登录方式</span>
+							</div>
+							<div class="right other_right">
+								<a href="#"><i class="fa fa-qq fa-2x"></i></a>
+								<a href="#"><i class="fa fa-weixin fa-2x"></i></a>
+								<a href="#"><i class="fa fa-weibo fa-2x"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		<script type="text/javascript" src="js/common.js" ></script>
 </form>
 </div>
 </body>
